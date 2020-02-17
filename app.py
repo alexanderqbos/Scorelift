@@ -1,5 +1,5 @@
 # app.py
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, url_for, redirect
 app = Flask(__name__)
 
 
@@ -29,16 +29,15 @@ def respond():
 
 @app.route('/post/', methods=['POST'])
 def post_something():
-    param = request.form.get('name')
-    print(param)
+    print(request.json)
+    data = request.json
+    white = data['white']
+    blue = data['blue']
+    game = data['game']
     # You can add the test cases you made in the previous function, but in our case here you are just testing the
     # POST functionality
-    if param:
-        return jsonify({
-            "Message": f"Welcome {param} to our awesome platform!!",
-            # Add this option to distinct the POST request
-            "METHOD" : "POST"
-        })
+    if white and blue and game:
+        return redirect(url_for('static', filename="games.html"))
     else:
         return jsonify({
             "ERROR": "no name found, please send a name."
@@ -47,7 +46,7 @@ def post_something():
 # A welcome message to test our server
 @app.route('/')
 def index():
-    return "<h1>Welcome to our server !!</h1>"
+    return url_for('static', filename="games.html")
 
 
 if __name__ == '__main__':
